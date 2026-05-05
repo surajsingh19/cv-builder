@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding Cost Simulator</title>
+    <style>
+        :root { --p: #2563eb; --s: #64748b; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #1e293b; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .card { background: var(--card); border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .inner-box { background: var(--card); border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
+        h1, h2, h3 { margin-top: 0; color: #0f172a; }
+        label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--s); }
+        select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 16px; font-size: 16px; box-sizing: border-box; }
+        
+        /* Master Collapsible Style */
+        .master-collapsible { background: #e2e8f0; border-radius: 12px; overflow: hidden; margin-top: 20px; border: 1px solid #cbd5e1; }
+        .collapsible-header { padding: 15px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: #1e293b; background: #e2e8f0; }
+        .collapsible-content { padding: 20px; display: none; background: #f1f5f9; }
+        .master-collapsible.active .collapsible-content { display: block; }
+        .master-collapsible.active .collapsible-header { border-bottom: 1px solid #cbd5e1; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; background: #f8fafc; padding: 10px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
+        
+        .results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .metric { background: #eff6ff; padding: 16px; border-radius: 8px; text-align: center; border: 1px solid #bfdbfe; }
+        .metric-val { font-size: 20px; font-weight: 800; color: var(--p); display: block; }
+        .metric-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #1d4ed8; }
+        
+        .section-tag { background: #475569; color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; vertical-align: middle; }
+        input[type="number"] { margin-bottom: 0; padding: 6px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header style="text-align:center; margin-bottom: 30px;">
+        <h1>Demo Creation Budget Simulator</h1>
+    </header>
+
+    <div class="grid">
+        <!-- 1. Configuration Area -->
+        <div class="card">
+            <h3>1. Project Setup</h3>
+            <label>Model Pricing (May 2026)</label>
+            <select id="llm" onchange="calc()">
+                <optgroup label="OpenAI">
+                    <option value="gpt55">GPT-5.5 (Flagship) - $5.00/$30.00</option>
+                    <option value="gpt54">GPT-5.4 (Standard) - $2.50/$15.00</option>
+                </optgroup>
+                <optgroup label="Anthropic">
+                    <option value="opus47">Claude 4.7 Opus - $5.00/$25.00</option>
+                    <option value="sonnet46" selected>Claude 4.6 Sonnet - $3.00/$15.00</option>
+                </optgroup>
+                <optgroup label="Google">
+                    <option value="gem3pro">Gemini 3.1 Pro - $2.00/$12.00</option>
+                    <option value="gem3flash">Gemini 3.1 Flash - $0.25/$1.50</option>
+                </optgroup>
+            </select>
+
+            <label>Yearly Demo Volume</label>
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1;"><label style="font-size:10px">Simple</label><input type="number" id="q_s" value="10" oninput="calc()"></div>
+                <div style="flex:1;"><label style="font-size:10px">Medium</label><input type="number" id="q_m" value="30" oninput="calc()"></div>
+                <div style="flex:1;"><label style="font-size:10px">Hard</label><input type="number" id="q_h" value="10" oninput="calc()"></div>
+            </div>
+        </div>
+
+        <!-- 2. Results Area -->
+        <div class="card">
+            <h3>2. Token Cost Projection</h3>
+            <div class="results">
+                <div class="metric"><span class="metric-label">Yearly Budget</span><span class="metric-val" id="res_t">$0</span></div>
+                <div class="metric"><span class="metric-label">Avg / Demo</span><span class="metric-val" id="res_a">$0</span></div>
+                <div class="metric"><span class="metric-label">Monthly Burn</span><span class="metric-val" id="res_m">$0</span></div>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <label>Input vs Output Cost Split</label>
+                <div id="split" style="height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; display: flex;">
+                    <div id="split_in" style="background: #2563eb; width: 50%;"></div>
+                    <div id="split_out" style="background: #93c5fd; width: 50%;"></div>
+                </div>
+                <div style="display:flex; justify-content: space-between; font-size: 11px; margin-top: 5px;">
+                    <span>Input Cost: <b id="val_in">$0</b></span>
+                    <span>Output Cost: <b id="val_out">$0</b></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MASTER OUTER BOX (Collapsed by Default) -->
+    <div class="master-collapsible" id="masterBox">
+        <div class="collapsible-header" onclick="this.parentElement.classList.toggle('active')">
+            <span>⚙️ Detailed Engineering Assumptions</span>
+            <span>▼</span>
+        </div>
+        
+        <div class="collapsible-content">
+            
+            <!-- Internal Box: Fixed Assumptions -->
+            <div class="inner-box">
+                <h4 style="margin-bottom:15px; display: flex; align-items: center; justify-content: space-between;">
+                    Fixed Assumptions <span class="section-tag">Independent of Complexity</span>
+                </h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                    <div>
+                        <label style="font-size:11px">System Prompt</label>
+                        <input type="number" id="fixed_sys" value="5000" oninput="calc()">
+                    </div>
+                    <div>
+                        <label style="font-size:11px">Thinking / Iter</label>
+                        <input type="number" id="fixed_think" value="2000" oninput="calc()">
+                    </div>
+                    <div>
+                        <label style="font-size:11px">Iter In (% Anchor)</label>
+                        <input type="number" id="pct_in" value="70" oninput="calc()">
+                    </div>
+                    <div>
+                        <label style="font-size:11px">Iter Out (% Anchor)</label>
+                        <input type="number" id="pct_out" value="20" oninput="calc()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Internal Box: Complexity Assumptions -->
+            <div class="inner-box">
+                <h4 style="margin-bottom:15px; display: flex; align-items: center; justify-content: space-between;">
+                    Complexity Assumptions <span class="section-tag">Tier Dependent</span>
+                </h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Simple Complexity</th>
+                            <th>Medium Complexity</th>
+                            <th>Hard Complexity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Init Dev <b>Input</b></td>
+                            <td><input type="number" id="init_in_s" value="5000" oninput="calc()"></td>
+                            <td><input type="number" id="init_in_m" value="10000" oninput="calc()"></td>
+                            <td><input type="number" id="init_in_h" value="20000" oninput="calc()"></td>
+                        </tr>
+                        <tr>
+                            <td>Init Dev <b>Output</b> (Anchor)</td>
+                            <td><input type="number" id="init_out_s" value="20000" oninput="calc()"></td>
+                            <td><input type="number" id="init_out_m" value="100000" oninput="calc()"></td>
+                            <td><input type="number" id="init_out_h" value="250000" oninput="calc()"></td>
+                        </tr>
+                        <tr>
+                            <td>Iterations</td>
+                            <td><input type="number" id="it_s" value="20" oninput="calc()"></td>
+                            <td><input type="number" id="it_m" value="80" oninput="calc()"></td>
+                            <td><input type="number" id="it_h" value="150" oninput="calc()"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const models = {
+        "gpt55": [5.00, 30.00],
+        "gpt54": [2.50, 15.00],
+        "opus47": [5.00, 25.00],
+        "sonnet46": [3.00, 15.00],
+        "gem3pro": [2.00, 12.00],
+        "gem3flash": [0.25, 1.50]
+    };
+
+    function calc() {
+        const [pIn, pOut] = models[document.getElementById('llm').value];
+        
+        // Fixed variables
+        const sysPrompt = parseFloat(document.getElementById('fixed_sys').value) || 0;
+        const thinkTokens = parseFloat(document.getElementById('fixed_think').value) || 0;
+        const pctIn = (parseFloat(document.getElementById('pct_in').value) || 0) / 100;
+        const pctOut = (parseFloat(document.getElementById('pct_out').value) || 0) / 100;
+
+        const tiers = ['s', 'm', 'h'];
+        let totalInCost = 0;
+        let totalOutCost = 0;
+        let totalDemos = 0;
+
+        tiers.forEach(t => {
+            const qty = parseFloat(document.getElementById(`q_${t}`).value) || 0;
+            const initIn = parseFloat(document.getElementById(`init_in_${t}`).value) || 0;
+            const initOut = parseFloat(document.getElementById(`init_out_${t}`).value) || 0;
+            const iters = parseFloat(document.getElementById(`it_${t}`).value) || 0;
+
+            // Iteration costs
+            const iterInputTokens = initOut * pctIn;
+            const iterOutputTokens = initOut * pctOut;
+
+            // Total Tokens for ONE demo in this tier
+            const totalInputTokens = initIn + (iters * (sysPrompt + iterInputTokens));
+            const totalOutputTokens = initOut + (iters * (thinkTokens + iterOutputTokens));
+
+            // Accumulate
+            totalInCost += (totalInputTokens / 1000000) * pIn * qty;
+            totalOutCost += (totalOutputTokens / 1000000) * pOut * qty;
+            totalDemos += qty;
+        });
+
+        const grandTotal = totalInCost + totalOutCost;
+        const avg = totalDemos > 0 ? grandTotal / totalDemos : 0;
+
+        // UI Updates
+        document.getElementById('res_t').innerText = '$' + grandTotal.toLocaleString(undefined, {maximumFractionDigits: 0});
+        document.getElementById('res_a').innerText = '$' + avg.toFixed(2);
+        document.getElementById('res_m').innerText = '$' + (grandTotal/12).toLocaleString(undefined, {maximumFractionDigits: 0});
+        
+        document.getElementById('val_in').innerText = '$' + totalInCost.toLocaleString(undefined, {maximumFractionDigits: 0});
+        document.getElementById('val_out').innerText = '$' + totalOutCost.toLocaleString(undefined, {maximumFractionDigits: 0});
+        
+        const inPct = (totalInCost / grandTotal) * 100 || 50;
+        document.getElementById('split_in').style.width = inPct + '%';
+        document.getElementById('split_out').style.width = (100 - inPct) + '%';
+    }
+
+    window.onload = calc;
+</script>
+</body>
+</html>
