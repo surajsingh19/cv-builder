@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Knowledge Hub</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      background: #f4f7fb;
+      font-family: Arial, sans-serif;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #0f172a, #1e293b);
+    }
+
+    .navbar-brand {
+      color: white !important;
+      font-weight: bold;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border-radius: 24px;
+      padding: 45px;
+      margin-top: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+
+    .member-card {
+      border-radius: 22px;
+      overflow: hidden;
+      border: none;
+      background: white;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: 0.3s;
+      height: 100%;
+    }
+
+    .member-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .member-header {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+      padding: 22px;
+    }
+
+    .member-body {
+      padding: 24px;
+    }
+
+    .tag {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-radius: 20px;
+      padding: 6px 12px;
+      display: inline-block;
+      margin: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .table-card {
+      background: white;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .small-text {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .activity-card {
+      background: white;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border-left: 5px solid #2563eb;
+      height: 100%;
+    }
+
+    .analytics-card {
+      background: white;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      height: 100%;
+    }
+
+    .skill-pill {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border-radius: 999px;
+      padding: 8px 14px;
+      display: inline-block;
+      margin: 5px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      color: #64748b;
+      padding: 40px 0 20px;
+    }
+
+    .progress {
+      height: 14px;
+      border-radius: 999px;
+    }
+
+    .table-hover tbody tr:hover {
+      background: #eef4ff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="#">
+        <i class="fa-solid fa-users"></i>
+        Team Knowledge Hub
+      </a>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+
+    <div class="hero">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1 class="fw-bold">Internal Team Dashboard</h1>
+          <p class="mt-3 mb-0 fs-5">
+            Discover team expertise, projects, certifications, blogs,
+            learning initiatives, and knowledge contributions.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="row mt-5">
+      <div class="col-lg-6">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control form-control-lg"
+          placeholder="Search members, projects, skills, initiatives..."
+        />
+      </div>
+    </div>
+
+    <!-- Members -->
+    <div class="mt-5">
+      <h2 class="section-title">
+        <i class="fa-solid fa-user-group"></i>
+        Team Members
+      </h2>
+
+      <div class="row" id="membersContainer"></div>
+    </div>
+
+    <!-- Projects -->
+    <div class="mt-5">
+      <h2 class="section-title">
+        <i class="fa-solid fa-diagram-project"></i>
+        Projects Portfolio
+      </h2>
+
+      <div class="table-card table-responsive">
+        <table class="table table-hover align-middle" id="projectsTable">
+          <thead class="table-dark">
+            <tr>
+              <th>Person</th>
+              <th>Project</th>
+              <th>Client</th>
+              <th>Role</th>
+              <th>Allocation</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Skills Intelligence -->
+    <div class="mt-5">
+      <h2 class="section-title">
+        <i class="fa-solid fa-brain"></i>
+        Team Skills Intelligence
+      </h2>
+
+      <div class="row" id="skillsAnalyticsContainer"></div>
+    </div>
+
+    <!-- Activities -->
+    <div class="mt-5">
+      <h2 class="section-title">
+        <i class="fa-solid fa-lightbulb"></i>
+        Knowledge Contributions & Activities
+      </h2>
+
+      <div class="row" id="activitiesContainer"></div>
+    </div>
+
+    <div class="footer">
+      Team Knowledge Hub Dashboard
+    </div>
+  </div>
+
+  <script>
+    const EXCEL_FILE_URL = './team_hub_data_dummy.xlsx';
+
+    let members = [];
+    let skills = [];
+    let projects = [];
+    let activities = [];
+
+    document.getElementById('searchInput').addEventListener('input', renderDashboard);
+
+    async function loadExcelData() {
+      try {
+        const response = await fetch(EXCEL_FILE_URL);
+
+        if (!response.ok) {
+          throw new Error('Excel file not found');
+        }
+
+        const data = await response.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        members = XLSX.utils.sheet_to_json(workbook.Sheets['Members'] || {});
+        skills = XLSX.utils.sheet_to_json(workbook.Sheets['Skills'] || {});
+        projects = XLSX.utils.sheet_to_json(workbook.Sheets['Projects'] || {});
+        activities = XLSX.utils.sheet_to_json(workbook.Sheets['MemberActivities'] || {});
+
+        renderDashboard();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderDashboard() {
+      renderMembers();
+      renderProjects();
+      renderSkillsAnalytics();
+      renderActivities();
+    }
+
+    function renderMembers() {
+      const container = document.getElementById('membersContainer');
+      container.innerHTML = '';
+
+      const search = document.getElementById('searchInput').value.toLowerCase();
+
+      const filteredMembers = members.filter(member =>
+        JSON.stringify(member).toLowerCase().includes(search)
+      );
+
+      filteredMembers.forEach(member => {
+        const memberSkills = skills.filter(s => s.EmployeeID === member.EmployeeID);
+        const memberProjects = projects.filter(p => p.EmployeeID === member.EmployeeID);
+
+        const card = `
+          <div class="col-lg-4 mb-4">
+            <div class="member-card">
+
+              <div class="member-header">
+                <h4>${member.Name}</h4>
+                <div>${member.Designation}</div>
+                <div class="small-text text-light mt-2">
+                  ${member.Location}
+                </div>
+              </div>
+
+              <div class="member-body">
+                <p>${member.About || ''}</p>
+
+                <div class="mb-3">
+                  <strong>Band:</strong> ${member.Band}
+                </div>
+
+                <div class="mb-3">
+                  <strong>Hometown:</strong> ${member.Hometown}
+                </div>
+
+                <div class="mb-3">
+                  <strong>Skills</strong>
+                  <div class="mt-2">
+                    ${memberSkills.map(s => `<span class="tag">${s.Skill}</span>`).join('')}
+                  </div>
+                </div>
+
+                <div>
+                  <strong>Projects</strong>
+                  <div class="mt-2">
+                    ${memberProjects.map(p => `<span class="tag">${p.ProjectName}</span>`).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        container.innerHTML += card;
+      });
+    }
+
+    function renderProjects() {
+      const tbody = document.querySelector('#projectsTable tbody');
+      tbody.innerHTML = '';
+
+      const search = document.getElementById('searchInput').value.toLowerCase();
+
+      const filteredProjects = projects.filter(project =>
+        JSON.stringify(project).toLowerCase().includes(search)
+      );
+
+      filteredProjects.forEach((project, index) => {
+        const modalId = `projectModal${index}`;
+
+        const row = `
+          <tr data-bs-toggle="modal" data-bs-target="#${modalId}">
+            <td>${project.PersonName}</td>
+            <td><strong>${project.ProjectName}</strong></td>
+            <td>${project.Client}</td>
+            <td>${project.Role}</td>
+            <td>${project.AllocationPercent}%</td>
+            <td><span class="badge bg-primary">${project.Status}</span></td>
+          </tr>
+
+          <div class="modal fade" id="${modalId}" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content">
+
+                <div class="modal-header bg-dark text-white">
+                  <h5 class="modal-title">${project.ProjectName}</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="mb-4">
+                    <h6 class="fw-bold text-primary">Problem Statement</h6>
+                    <p>${project.ProblemStatement || '-'}</p>
+                  </div>
+
+                  <div class="mb-4">
+                    <h6 class="fw-bold text-primary">Solution Overview</h6>
+                    <p>${project.SolutionOverview || '-'}</p>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <strong>Client:</strong><br>
+                      ${project.Client}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <strong>Role:</strong><br>
+                      ${project.Role}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <strong>Allocation:</strong><br>
+                      ${project.AllocationPercent}%
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                      <strong>Status:</strong><br>
+                      ${project.Status}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        `;
+
+        tbody.innerHTML += row;
+      });
+    }
+
+    function renderSkillsAnalytics() {
+      const container = document.getElementById('skillsAnalyticsContainer');
+      container.innerHTML = '';
+
+      const categoryMap = {};
+      const levelMap = {
+        Beginner: 0,
+        Intermediate: 0,
+        Advanced: 0,
+        Expert: 0
+      };
+
+      skills.forEach(skill => {
+        const category = skill.Category || 'Other';
+        categoryMap[category] = (categoryMap[category] || 0) + 1;
+
+        if (levelMap.hasOwnProperty(skill.Level)) {
+          levelMap[skill.Level] += 1;
+        }
+      });
+
+      const topCategories = Object.entries(categoryMap)
+        .sort((a, b) => b[1] - a[1]);
+
+      const categoryHtml = topCategories.map(item => {
+        const width = Math.min(item[1] * 22, 100);
+
+        return `
+          <div class="mb-4">
+            <div class="d-flex justify-content-between mb-2">
+              <strong>${item[0]}</strong>
+              <span>${item[1]} skills</span>
+            </div>
+
+            <div class="progress">
+              <div class="progress-bar" style="width:${width}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const html = `
+        <div class="col-lg-7 mb-4">
+          <div class="analytics-card">
+            <h4 class="mb-4">
+              <i class="fa-solid fa-chart-column"></i>
+              Skill Category Distribution
+            </h4>
+
+            ${categoryHtml}
+          </div>
+        </div>
+
+        <div class="col-lg-5 mb-4">
+          <div class="analytics-card">
+            <h4 class="mb-4">
+              <i class="fa-solid fa-medal"></i>
+              Expertise Breakdown
+            </h4>
+
+            <div class="d-flex flex-column gap-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Expert</span>
+                <span class="badge bg-dark">${levelMap.Expert}</span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Advanced</span>
+                <span class="badge bg-primary">${levelMap.Advanced}</span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Intermediate</span>
+                <span class="badge bg-warning text-dark">${levelMap.Intermediate}</span>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Beginner</span>
+                <span class="badge bg-success">${levelMap.Beginner}</span>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <h5 class="mb-3">Top Skill Areas</h5>
+
+            <div>
+              ${topCategories.slice(0, 8).map(item => `
+                <span class="skill-pill">${item[0]} (${item[1]})</span>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function renderActivities() {
+      const container = document.getElementById('activitiesContainer');
+      container.innerHTML = '';
+
+      const search = document.getElementById('searchInput').value.toLowerCase();
+
+      const filteredActivities = activities.filter(activity =>
+        JSON.stringify(activity).toLowerCase().includes(search)
+      );
+
+      filteredActivities.forEach(activity => {
+        const card = `
+          <div class="col-lg-6 mb-4">
+            <div class="activity-card">
+
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5>${activity.Title}</h5>
+                  <div class="small-text">
+                    ${activity.Name} • ${activity.ActivityType}
+                  </div>
+                </div>
+
+                <span class="badge bg-success">
+                  ${activity.Status}
+                </span>
+              </div>
+
+              <p class="mt-3">
+                ${activity.Description || ''}
+              </p>
+
+              <div class="small-text">
+                <strong>Platform:</strong>
+                ${activity.PlatformOrProvider || '-'}
+              </div>
+
+              <div class="small-text mt-2">
+                <strong>Date:</strong>
+                ${activity.Date || '-'}
+              </div>
+
+              ${activity.URL ? `
+                <div class="mt-4">
+                  <a href="${activity.URL}" target="_blank" class="btn btn-outline-primary btn-sm">
+                    Open Link
+                  </a>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+
+        container.innerHTML += card;
+      });
+    }
+
+    loadExcelData();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
