@@ -1,571 +1,1110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Team Knowledge Hub</title>
-
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-  />
-
-  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
-  <style>
-    body {
-      background: #f4f7fb;
-      font-family: Arial, sans-serif;
-    }
-
-    .navbar {
-      background: linear-gradient(90deg, #0f172a, #1e293b);
-    }
-
-    .navbar-brand {
-      color: white !important;
-      font-weight: bold;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      border-radius: 24px;
-      padding: 45px;
-      margin-top: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-
-    .section-title {
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #0f172a;
-    }
-
-    .member-card {
-      border-radius: 22px;
-      overflow: hidden;
-      border: none;
-      background: white;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-      transition: 0.3s;
-      height: 100%;
-    }
-
-    .member-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .member-header {
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: white;
-      padding: 22px;
-    }
-
-    .member-body {
-      padding: 24px;
-    }
-
-    .tag {
-      background: #dbeafe;
-      color: #1d4ed8;
-      border-radius: 20px;
-      padding: 6px 12px;
-      display: inline-block;
-      margin: 4px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .table-card {
-      background: white;
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-    }
-
-    .small-text {
-      font-size: 13px;
-      color: #64748b;
-    }
-
-    .activity-card {
-      background: white;
-      border-radius: 20px;
-      padding: 22px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      border-left: 5px solid #2563eb;
-      height: 100%;
-    }
-
-    .analytics-card {
-      background: white;
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-      height: 100%;
-    }
-
-    .skill-pill {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      border-radius: 999px;
-      padding: 8px 14px;
-      display: inline-block;
-      margin: 5px;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .footer {
-      text-align: center;
-      color: #64748b;
-      padding: 40px 0 20px;
-    }
-
-    .progress {
-      height: 14px;
-      border-radius: 999px;
-    }
-
-    .table-hover tbody tr:hover {
-      background: #eef4ff;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Team Dashboard</title>
 </head>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     ████████╗███████╗ █████╗ ███╗   ███╗    ██████╗  █████╗ ████████╗ █████╗
+        ██║   ██╔════╝██╔══██╗████╗ ████║    ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗
+        ██║   █████╗  ███████║██╔████╔██║    ██║  ██║███████║   ██║   ███████║
+        ██║   ██╔══╝  ██╔══██║██║╚██╔╝██║    ██║  ██║██╔══██║   ██║   ██╔══██║
+        ██║   ███████╗██║  ██║██║ ╚═╝ ██║    ██████╔╝██║  ██║   ██║   ██║  ██║
+        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
+
+     ════════════════════════════════════════════════════════════════════════════
+     EDIT ONLY THIS SECTION BELOW — Safe to change without touching any code.
+     Add/update members, projects, skills, and activities here.
+     DO NOT change anything outside this <script> block.
+     ════════════════════════════════════════════════════════════════════════════ -->
+
+<script id="TEAM_DATA" type="application/json">
+{
+  "teamName": "Horizon Engineering",
+  "members": [
+    {
+      "id": "m1",
+      "name": "Aanya Sharma",
+      "role": "Tech Lead",
+      "avatar": "AS",
+      "officeLocation": "Gurugram, India",
+      "hometown": "Jaipur, Rajasthan",
+      "contact": "aanya.sharma@company.com",
+      "about": "Full-stack engineer with 7 years of experience building scalable systems. Passionate about clean architecture and mentoring junior developers.",
+      "hobbies": ["Photography", "Hiking", "Chess", "Open Source"]
+    },
+    {
+      "id": "m2",
+      "name": "Rohan Mehta",
+      "role": "Senior Developer",
+      "avatar": "RM",
+      "officeLocation": "Bengaluru, India",
+      "hometown": "Mumbai, Maharashtra",
+      "contact": "rohan.mehta@company.com",
+      "about": "Backend specialist focused on microservices and cloud infrastructure. Fan of automation and DevOps culture.",
+      "hobbies": ["Gaming", "Cooking", "Cycling", "Podcasts"]
+    },
+    {
+      "id": "m3",
+      "name": "Priya Nair",
+      "role": "Product Manager",
+      "avatar": "PN",
+      "officeLocation": "Hyderabad, India",
+      "hometown": "Kochi, Kerala",
+      "contact": "priya.nair@company.com",
+      "about": "Product strategist bridging business goals and technical execution. Loves customer research and turning ambiguity into clear roadmaps.",
+      "hobbies": ["Reading", "Yoga", "Travel", "Cooking"]
+    },
+    {
+      "id": "m4",
+      "name": "Dev Kapoor",
+      "role": "Frontend Developer",
+      "avatar": "DK",
+      "officeLocation": "Gurugram, India",
+      "hometown": "Chandigarh, Punjab",
+      "contact": "dev.kapoor@company.com",
+      "about": "UI/UX focused developer with a deep love for accessibility and pixel-perfect interfaces. React and design systems enthusiast.",
+      "hobbies": ["Sketching", "Badminton", "UI Design", "Movies"]
+    },
+    {
+      "id": "m5",
+      "name": "Sneha Iyer",
+      "role": "Data Engineer",
+      "avatar": "SI",
+      "officeLocation": "Pune, India",
+      "hometown": "Chennai, Tamil Nadu",
+      "contact": "sneha.iyer@company.com",
+      "about": "Data pipeline architect with expertise in real-time analytics. Interested in ML Ops and making data accessible to all teams.",
+      "hobbies": ["Kathak Dance", "Gardening", "Data Viz", "Baking"]
+    }
+  ],
+
+  "projects": [
+    {
+      "id": "p1",
+      "name": "Nexus Customer Portal",
+      "memberIds": ["m1", "m4"],
+      "client": "Nexus Retail Ltd.",
+      "problemStatement": "Customers lacked a self-service portal for order tracking, returns, and account management, leading to high support call volume.",
+      "allocation": "60%",
+      "status": "Active",
+      "techStack": ["React", "Node.js", "PostgreSQL", "AWS S3", "Redis"],
+      "approach": "Built a React SPA backed by a Node.js REST API with JWT auth. Used Redis for session caching to reduce DB hits and S3 for document storage. Progressive rollout by user cohort.",
+      "timeline": { "start": "Jan 2025", "end": "Jun 2025" },
+      "techLead": "m1",
+      "pm": "m3",
+      "otherMembers": ["m4"]
+    },
+    {
+      "id": "p2",
+      "name": "DataFlow Pipeline",
+      "memberIds": ["m2", "m5"],
+      "client": "Internal",
+      "problemStatement": "Internal teams were spending 40% of their time on manual data reconciliation across 5 disconnected systems with no single source of truth.",
+      "allocation": "80%",
+      "status": "Active",
+      "techStack": ["Apache Kafka", "Python", "Airflow", "Snowflake", "dbt", "Docker"],
+      "approach": "Designed an event-driven architecture using Kafka for real-time ingestion. Airflow orchestrates nightly batch reconciliation jobs. dbt handles transformation layer with full lineage tracking.",
+      "timeline": { "start": "Mar 2025", "end": "Aug 2025" },
+      "techLead": "m2",
+      "pm": "m3",
+      "otherMembers": ["m5"]
+    },
+    {
+      "id": "p3",
+      "name": "Sentinel Access Control",
+      "memberIds": ["m1", "m2"],
+      "client": "Vantara Corp",
+      "problemStatement": "Legacy role-based access system could not support fine-grained permissions needed for multi-tenant SaaS product expansion.",
+      "allocation": "100%",
+      "status": "Completed",
+      "techStack": ["Go", "gRPC", "Postgres", "Kubernetes", "Keycloak"],
+      "approach": "Replaced legacy RBAC with an Attribute-Based Access Control (ABAC) engine built in Go. Keycloak handles identity federation. Deployed on Kubernetes with horizontal autoscaling.",
+      "timeline": { "start": "Sep 2024", "end": "Jan 2025" },
+      "techLead": "m1",
+      "pm": "m3",
+      "otherMembers": ["m2"]
+    },
+    {
+      "id": "p4",
+      "name": "Pulse Analytics Dashboard",
+      "memberIds": ["m4", "m5"],
+      "client": "Internal",
+      "problemStatement": "Leadership had no real-time visibility into product KPIs, relying on weekly manual Excel reports with 3-day data lag.",
+      "allocation": "40%",
+      "status": "On Hold",
+      "techStack": ["React", "D3.js", "FastAPI", "ClickHouse", "Grafana"],
+      "approach": "Built a real-time dashboard using ClickHouse for OLAP queries and D3.js for custom visualisations. FastAPI serves aggregated metrics. Grafana handles alerting layer.",
+      "timeline": { "start": "Apr 2025", "end": "Sep 2025" },
+      "techLead": "m4",
+      "pm": "m3",
+      "otherMembers": ["m5"]
+    }
+  ],
+
+  "skills": [
+    { "skill": "React",          "memberIds": ["m1", "m4"] },
+    { "skill": "Node.js",        "memberIds": ["m1", "m2"] },
+    { "skill": "Python",         "memberIds": ["m2", "m5"] },
+    { "skill": "PostgreSQL",     "memberIds": ["m1", "m2"] },
+    { "skill": "AWS",            "memberIds": ["m1", "m2", "m5"] },
+    { "skill": "Docker",         "memberIds": ["m2", "m5"] },
+    { "skill": "Kubernetes",     "memberIds": ["m1", "m2"] },
+    { "skill": "Apache Kafka",   "memberIds": ["m2", "m5"] },
+    { "skill": "D3.js",          "memberIds": ["m4", "m5"] },
+    { "skill": "Go",             "memberIds": ["m2"] },
+    { "skill": "Product Strategy","memberIds": ["m3"] },
+    { "skill": "Figma",          "memberIds": ["m3", "m4"] },
+    { "skill": "Data Pipelines", "memberIds": ["m5"] },
+    { "skill": "Agile / Scrum",  "memberIds": ["m1", "m3", "m4"] },
+    { "skill": "TypeScript",     "memberIds": ["m1", "m4"] }
+  ],
+
+  "activities": [
+    {
+      "id": "a1",
+      "memberId": "m1",
+      "type": "Certification",
+      "title": "AWS Solutions Architect – Professional",
+      "description": "Pursuing the AWS SAP-C02 certification to deepen cloud infrastructure expertise.",
+      "date": "May 2025",
+      "link": ""
+    },
+    {
+      "id": "a2",
+      "memberId": "m2",
+      "type": "Hackathon",
+      "title": "InnovateTech Hackathon 2025",
+      "description": "Participated in a 48-hour hackathon, built an AI-powered incident triage tool. Finished in top 10 teams.",
+      "date": "Apr 2025",
+      "link": ""
+    },
+    {
+      "id": "a3",
+      "memberId": "m3",
+      "type": "Seminar / Workshop",
+      "title": "Mind the Product – London Summit",
+      "description": "Attended the global product management conference. Key takeaways on continuous discovery and OKR alignment shared with the team.",
+      "date": "Mar 2025",
+      "link": ""
+    },
+    {
+      "id": "a4",
+      "memberId": "m4",
+      "type": "Learning Session",
+      "title": "Internal: React Performance Patterns",
+      "description": "Delivered a 1-hour internal learning session on React memoisation, lazy loading, and bundle optimisation strategies.",
+      "date": "May 2025",
+      "link": ""
+    },
+    {
+      "id": "a5",
+      "memberId": "m5",
+      "type": "Blog",
+      "title": "Why dbt Changed How We Think About Data",
+      "description": "Wrote a detailed technical blog on adopting dbt for transformation layers, published on the company engineering blog.",
+      "date": "Apr 2025",
+      "link": "https://engineering.company.com/dbt-blog"
+    },
+    {
+      "id": "a6",
+      "memberId": "m1",
+      "type": "Learning Session",
+      "title": "Internal: Intro to ABAC & Keycloak",
+      "description": "Led a knowledge transfer session post Sentinel project, covering attribute-based access control concepts and Keycloak integration patterns.",
+      "date": "Feb 2025",
+      "link": ""
+    },
+    {
+      "id": "a7",
+      "memberId": "m2",
+      "type": "Certification",
+      "title": "Certified Kubernetes Administrator (CKA)",
+      "description": "Completed CKA certification to formalise hands-on Kubernetes experience.",
+      "date": "Jan 2025",
+      "link": ""
+    }
+  ]
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     ⚠️  DO NOT EDIT BELOW THIS LINE — Layout, styles and logic live here.
+     ════════════════════════════════════════════════════════════════════════ -->
+
+<style>
+  /* ── Reset & Base ───────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:      #0F1B2D;
+    --card:      #162236;
+    --card2:     #1C2D45;
+    --border:    #243550;
+    --teal:      #00C9A7;
+    --teal-dim:  #00856f;
+    --amber:     #F5A623;
+    --coral:     #FF6B6B;
+    --text:      #E8EDF4;
+    --text-dim:  #7A90AE;
+    --text-mid:  #A8BCCE;
+    --font:      -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono:      'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --radius:    12px;
+    --radius-sm: 6px;
+    --shadow:    0 4px 24px rgba(0,0,0,0.35);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── Sidebar ────────────────────────────────────────────────── */
+  .sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+    padding: 0 0 24px;
+  }
+
+  .sidebar-logo {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  .sidebar-logo .team-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+
+  .sidebar-logo .team-label {
+    font-size: 11px;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 3px;
+    font-family: var(--mono);
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    padding: 14px 20px 6px;
+    font-family: var(--mono);
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: var(--text-mid);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.18s;
+    cursor: pointer;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    color: var(--text);
+    background: rgba(0,201,167,0.07);
+    border-left-color: var(--teal);
+  }
+
+  .nav-link .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  /* ── Main Content ───────────────────────────────────────────── */
+  .main {
+    margin-left: 220px;
+    flex: 1;
+    padding: 36px 40px;
+    max-width: 1200px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .page-header {
+    margin-bottom: 32px;
+  }
+
+  .page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  .page-header p {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  /* ── Member Cards ───────────────────────────────────────────── */
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .member-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .member-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,201,167,0.12);
+    border-color: var(--teal-dim);
+  }
+
+  .member-card-top {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--card2), var(--card));
+  }
+
+  .avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: var(--navy);
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+
+  .member-name { font-size: 16px; font-weight: 700; color: var(--text); }
+  .member-role {
+    font-size: 12px; color: var(--teal); margin-top: 3px;
+    font-family: var(--mono); letter-spacing: 0.04em;
+  }
+
+  .member-card-body { padding: 18px 24px; }
+
+  .info-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 10px; font-size: 13px; color: var(--text-mid);
+  }
+
+  .info-row .info-icon { color: var(--teal); flex-shrink: 0; width: 16px; text-align: center; margin-top: 1px; }
+  .info-row a { color: var(--teal); text-decoration: none; }
+  .info-row a:hover { text-decoration: underline; }
+
+  .member-about {
+    font-size: 13px; color: var(--text-dim); line-height: 1.6;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .hobbies {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .hobby-tag {
+    background: rgba(0,201,167,0.08);
+    border: 1px solid rgba(0,201,167,0.2);
+    color: var(--teal);
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-family: var(--mono);
+  }
+
+  /* ── Projects ───────────────────────────────────────────────── */
+  .projects-table {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .table-header {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr 1.2fr 0.8fr 0.7fr;
+    padding: 14px 20px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px; font-family: var(--mono);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+
+  .project-row-wrap { border-bottom: 1px solid var(--border); }
+  .project-row-wrap:last-child { border-bottom: none; }
+
+  .project-row {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr 1.2fr 0.8fr 0.7fr;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    align-items: center;
+  }
+
+  .project-row:hover { background: rgba(0,201,167,0.05); }
+
+  .project-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .project-client { font-size: 13px; color: var(--text-mid); }
+  .project-members { font-size: 13px; color: var(--text-mid); }
+
+  .project-alloc {
+    font-size: 13px; font-family: var(--mono);
+    color: var(--amber);
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-family: var(--mono);
+    font-weight: 600; letter-spacing: 0.04em;
+  }
+
+  .status-Active   { background: rgba(0,201,167,0.12); color: var(--teal); border: 1px solid rgba(0,201,167,0.3); }
+  .status-Completed{ background: rgba(100,180,255,0.12); color: #64B4FF; border: 1px solid rgba(100,180,255,0.3); }
+  .status-On-Hold  { background: rgba(245,166,35,0.12); color: var(--amber); border: 1px solid rgba(245,166,35,0.3); }
+
+  .project-detail {
+    display: none;
+    padding: 24px 20px 28px;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px dashed var(--border);
+    animation: fadeIn 0.2s ease;
+  }
+
+  .project-detail.open { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .detail-block { }
+
+  .detail-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--teal); font-family: var(--mono); margin-bottom: 8px;
+  }
+
+  .detail-value { font-size: 13px; color: var(--text-mid); line-height: 1.65; }
+
+  .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tech-tag {
+    background: rgba(245,166,35,0.08);
+    border: 1px solid rgba(245,166,35,0.25);
+    color: var(--amber);
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 11px; font-family: var(--mono);
+  }
+
+  .team-member-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px 4px 4px;
+    margin: 3px; font-size: 12px;
+  }
+
+  .team-member-pill .pill-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: var(--navy);
+    font-family: var(--mono);
+  }
+
+  .problem-full {
+    font-size: 13px; color: var(--text-mid);
+    line-height: 1.65;
+    background: rgba(0,0,0,0.2);
+    border-left: 3px solid var(--teal-dim);
+    padding: 10px 14px; border-radius: 0 6px 6px 0;
+    margin-bottom: 20px;
+  }
+
+  .expand-hint {
+    font-size: 11px; color: var(--text-dim);
+    font-family: var(--mono); margin-left: auto;
+    grid-column: 5;
+    text-align: right;
+  }
+
+  /* ── Skills ─────────────────────────────────────────────────── */
+  .skills-toggle {
+    display: flex; gap: 0; margin-bottom: 28px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    overflow: hidden; width: fit-content;
+  }
+
+  .toggle-btn {
+    padding: 9px 22px; font-size: 13px; font-weight: 600;
+    background: transparent; color: var(--text-dim);
+    border: none; cursor: pointer; transition: all 0.18s;
+    font-family: var(--font);
+  }
+
+  .toggle-btn.active {
+    background: var(--teal); color: var(--navy);
+  }
+
+  .skills-view { display: none; }
+  .skills-view.active { display: block; }
+
+  /* By Skill */
+  .skill-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .skill-entry {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 20px;
+    transition: border-color 0.15s;
+  }
+
+  .skill-entry:hover { border-color: var(--teal-dim); }
+
+  .skill-name-label {
+    min-width: 160px; font-size: 14px; font-weight: 600;
+    color: var(--text);
+  }
+
+  .skill-bar-wrap {
+    flex: 1; height: 6px;
+    background: var(--border); border-radius: 3px; overflow: hidden;
+  }
+
+  .skill-bar {
+    height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-dim));
+    border-radius: 3px; transition: width 0.5s ease;
+  }
+
+  .skill-member-pills { display: flex; flex-wrap: wrap; gap: 6px; min-width: 200px; }
+  .skill-member-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,201,167,0.07); border: 1px solid rgba(0,201,167,0.2);
+    border-radius: 20px; padding: 3px 10px 3px 4px;
+    font-size: 12px; color: var(--text-mid);
+  }
+
+  .chip-avatar {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 700; color: var(--navy);
+    font-family: var(--mono);
+  }
+
+  /* By Member */
+  .member-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .member-skill-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+
+  .member-skill-header {
+    padding: 16px 18px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .member-skill-header .avatar { width: 38px; height: 38px; font-size: 13px; }
+
+  .ms-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .ms-role { font-size: 11px; color: var(--text-dim); font-family: var(--mono); margin-top: 2px; }
+
+  .member-skill-tags {
+    padding: 14px 18px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+
+  .member-skill-tag {
+    background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.22);
+    color: var(--amber); padding: 3px 10px; border-radius: 4px;
+    font-size: 11px; font-family: var(--mono);
+  }
+
+  /* ── Activities ─────────────────────────────────────────────── */
+  .activities-filter {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;
+  }
+
+  .filter-btn {
+    padding: 6px 16px; font-size: 12px; font-family: var(--mono);
+    border-radius: 20px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-dim);
+    cursor: pointer; transition: all 0.15s;
+  }
+
+  .filter-btn:hover { border-color: var(--teal-dim); color: var(--text); }
+  .filter-btn.active { background: rgba(0,201,167,0.1); border-color: var(--teal); color: var(--teal); }
+
+  .activities-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .activity-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px;
+    display: flex; gap: 16px; align-items: flex-start;
+    transition: border-color 0.15s;
+  }
+
+  .activity-card:hover { border-color: var(--teal-dim); }
+
+  .activity-type-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  .type-Certification    { background: rgba(100,180,255,0.1); }
+  .type-Hackathon        { background: rgba(255,107,107,0.1); }
+  .type-Seminar-Workshop { background: rgba(245,166,35,0.1); }
+  .type-Learning-Session { background: rgba(0,201,167,0.1); }
+  .type-Blog             { background: rgba(200,150,255,0.1); }
+
+  .activity-body { flex: 1; }
+
+  .activity-top {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;
+  }
+
+  .activity-type-badge {
+    font-size: 10px; font-family: var(--mono); text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 2px 8px; border-radius: 4px;
+  }
+
+  .badge-Certification    { background: rgba(100,180,255,0.12); color: #64B4FF; }
+  .badge-Hackathon        { background: rgba(255,107,107,0.12); color: var(--coral); }
+  .badge-Seminar-Workshop { background: rgba(245,166,35,0.12); color: var(--amber); }
+  .badge-Learning-Session { background: rgba(0,201,167,0.12); color: var(--teal); }
+  .badge-Blog             { background: rgba(200,150,255,0.12); color: #C896FF; }
+
+  .activity-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .activity-desc  { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-top: 4px; }
+
+  .activity-footer {
+    display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap;
+  }
+
+  .activity-who {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-mid);
+  }
+
+  .activity-who .chip-avatar { width: 18px; height: 18px; font-size: 8px; }
+
+  .activity-date {
+    font-size: 11px; font-family: var(--mono); color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  .activity-link {
+    font-size: 12px; color: var(--teal); text-decoration: none;
+    font-family: var(--mono);
+  }
+
+  .activity-link:hover { text-decoration: underline; }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px;
+    color: var(--text-dim); font-size: 14px;
+  }
+
+  /* ── Utility ────────────────────────────────────────────────── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  @media (max-width: 900px) {
+    .sidebar { width: 180px; }
+    .main { margin-left: 180px; padding: 24px 20px; }
+    .table-header, .project-row { grid-template-columns: 1.5fr 1fr 1fr 0.7fr; }
+    .table-header > *:nth-child(4), .project-row > *:nth-child(4) { display: none; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand" href="#">
-        <i class="fa-solid fa-users"></i>
-        Team Knowledge Hub
-      </a>
-    </div>
-  </nav>
-
-  <div class="container py-4">
-
-    <div class="hero">
-      <div class="row align-items-center">
-        <div class="col-lg-8">
-          <h1 class="fw-bold">Internal Team Dashboard</h1>
-          <p class="mt-3 mb-0 fs-5">
-            Discover team expertise, projects, certifications, blogs,
-            learning initiatives, and knowledge contributions.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Search -->
-    <div class="row mt-5">
-      <div class="col-lg-6">
-        <input
-          type="text"
-          id="searchInput"
-          class="form-control form-control-lg"
-          placeholder="Search members, projects, skills, initiatives..."
-        />
-      </div>
-    </div>
-
-    <!-- Members -->
-    <div class="mt-5">
-      <h2 class="section-title">
-        <i class="fa-solid fa-user-group"></i>
-        Team Members
-      </h2>
-
-      <div class="row" id="membersContainer"></div>
-    </div>
-
-    <!-- Projects -->
-    <div class="mt-5">
-      <h2 class="section-title">
-        <i class="fa-solid fa-diagram-project"></i>
-        Projects Portfolio
-      </h2>
-
-      <div class="table-card table-responsive">
-        <table class="table table-hover align-middle" id="projectsTable">
-          <thead class="table-dark">
-            <tr>
-              <th>Person</th>
-              <th>Project</th>
-              <th>Client</th>
-              <th>Role</th>
-              <th>Allocation</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Skills Intelligence -->
-    <div class="mt-5">
-      <h2 class="section-title">
-        <i class="fa-solid fa-brain"></i>
-        Team Skills Intelligence
-      </h2>
-
-      <div class="row" id="skillsAnalyticsContainer"></div>
-    </div>
-
-    <!-- Activities -->
-    <div class="mt-5">
-      <h2 class="section-title">
-        <i class="fa-solid fa-lightbulb"></i>
-        Knowledge Contributions & Activities
-      </h2>
-
-      <div class="row" id="activitiesContainer"></div>
-    </div>
-
-    <div class="footer">
-      Team Knowledge Hub Dashboard
-    </div>
+<!-- ── Sidebar ───────────────────────────────────────────────── -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="team-label">Internal</div>
+    <div class="team-name" id="sidebar-team-name">Team Dashboard</div>
   </div>
+  <span class="nav-section-label">Navigate</span>
+  <a class="nav-link active" onclick="showSection('members')"   data-section="members">
+    <span class="nav-icon">👤</span> Team Members
+  </a>
+  <a class="nav-link" onclick="showSection('projects')"  data-section="projects">
+    <span class="nav-icon">📁</span> Projects
+  </a>
+  <a class="nav-link" onclick="showSection('skills')"    data-section="skills">
+    <span class="nav-icon">⚡</span> Skills
+  </a>
+  <a class="nav-link" onclick="showSection('activities')" data-section="activities">
+    <span class="nav-icon">📋</span> Key Activities
+  </a>
+</nav>
 
-  <script>
-    const EXCEL_FILE_URL = './team_hub_data_dummy.xlsx';
+<!-- ── Main ─────────────────────────────────────────────────── -->
+<main class="main">
 
-    let members = [];
-    let skills = [];
-    let projects = [];
-    let activities = [];
+  <!-- Members Section -->
+  <section class="section active" id="section-members">
+    <div class="page-header">
+      <h1>Team Members</h1>
+      <p id="members-subtext"></p>
+    </div>
+    <div class="members-grid" id="members-grid"></div>
+  </section>
 
-    document.getElementById('searchInput').addEventListener('input', renderDashboard);
+  <!-- Projects Section -->
+  <section class="section" id="section-projects">
+    <div class="page-header">
+      <h1>Projects</h1>
+      <p>Click any row to view full details — tech stack, approach, and team.</p>
+    </div>
+    <div class="projects-table">
+      <div class="table-header">
+        <span>Project</span>
+        <span>Members</span>
+        <span>Client</span>
+        <span>Allocation</span>
+        <span>Status</span>
+      </div>
+      <div id="projects-list"></div>
+    </div>
+  </section>
 
-    async function loadExcelData() {
-      try {
-        const response = await fetch(EXCEL_FILE_URL);
+  <!-- Skills Section -->
+  <section class="section" id="section-skills">
+    <div class="page-header">
+      <h1>Skills</h1>
+      <p>Browse by skill to see who has it, or by member to see their full profile.</p>
+    </div>
+    <div class="skills-toggle">
+      <button class="toggle-btn active" onclick="showSkillView('by-skill', this)">By Skill</button>
+      <button class="toggle-btn" onclick="showSkillView('by-member', this)">By Member</button>
+    </div>
+    <div class="skills-view active" id="view-by-skill">
+      <div class="skill-list" id="skill-list"></div>
+    </div>
+    <div class="skills-view" id="view-by-member">
+      <div class="member-skills-grid" id="member-skills-grid"></div>
+    </div>
+  </section>
 
-        if (!response.ok) {
-          throw new Error('Excel file not found');
-        }
+  <!-- Activities Section -->
+  <section class="section" id="section-activities">
+    <div class="page-header">
+      <h1>Key Activities</h1>
+      <p>Certifications, workshops, hackathons, learning sessions, and blogs from the team.</p>
+    </div>
+    <div class="activities-filter" id="activities-filter"></div>
+    <div class="activities-list" id="activities-list"></div>
+  </section>
 
-        const data = await response.arrayBuffer();
-        const workbook = XLSX.read(data, { type: 'array' });
+</main>
 
-        members = XLSX.utils.sheet_to_json(workbook.Sheets['Members'] || {});
-        skills = XLSX.utils.sheet_to_json(workbook.Sheets['Skills'] || {});
-        projects = XLSX.utils.sheet_to_json(workbook.Sheets['Projects'] || {});
-        activities = XLSX.utils.sheet_to_json(workbook.Sheets['MemberActivities'] || {});
+<script>
+// ── Load Data ────────────────────────────────────────────────────────────────
+const RAW = document.getElementById('TEAM_DATA').textContent;
+const D = JSON.parse(RAW);
 
-        renderDashboard();
-      } catch (err) {
-        console.error(err);
-      }
-    }
+const byId = (arr, id) => arr.find(x => x.id === id);
+const memberById = id => byId(D.members, id);
 
-    function renderDashboard() {
-      renderMembers();
-      renderProjects();
-      renderSkillsAnalytics();
-      renderActivities();
-    }
+// avatar color cycling (not all teal)
+const AV_COLORS = [
+  ['#00C9A7','#00856f'],['#F5A623','#c47a0a'],
+  ['#64B4FF','#3a7fc1'],['#FF6B6B','#c73b3b'],['#C896FF','#8a4fc7']
+];
+const avColor = idx => AV_COLORS[idx % AV_COLORS.length];
 
-    function renderMembers() {
-      const container = document.getElementById('membersContainer');
-      container.innerHTML = '';
+// activity type → emoji
+const typeEmoji = { 'Certification':'🏅', 'Hackathon':'⚡', 'Seminar / Workshop':'🎤', 'Learning Session':'🧑‍🏫', 'Blog':'✍️' };
+const typeCls   = t => t.replace(/[^a-zA-Z]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
 
-      const search = document.getElementById('searchInput').value.toLowerCase();
+// ── Sidebar Team Name ────────────────────────────────────────────────────────
+document.getElementById('sidebar-team-name').textContent = D.teamName;
+document.title = D.teamName + ' Dashboard';
 
-      const filteredMembers = members.filter(member =>
-        JSON.stringify(member).toLowerCase().includes(search)
-      );
+// ── Navigation ───────────────────────────────────────────────────────────────
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.section === name);
+  });
+  document.getElementById('section-' + name).classList.add('active');
+}
 
-      filteredMembers.forEach(member => {
-        const memberSkills = skills.filter(s => s.EmployeeID === member.EmployeeID);
-        const memberProjects = projects.filter(p => p.EmployeeID === member.EmployeeID);
+// ── Members ──────────────────────────────────────────────────────────────────
+(function renderMembers() {
+  const grid = document.getElementById('members-grid');
+  document.getElementById('members-subtext').textContent =
+    D.members.length + ' members · ' + [...new Set(D.members.map(m => m.officeLocation))].length + ' office locations';
 
-        const card = `
-          <div class="col-lg-4 mb-4">
-            <div class="member-card">
-
-              <div class="member-header">
-                <h4>${member.Name}</h4>
-                <div>${member.Designation}</div>
-                <div class="small-text text-light mt-2">
-                  ${member.Location}
-                </div>
-              </div>
-
-              <div class="member-body">
-                <p>${member.About || ''}</p>
-
-                <div class="mb-3">
-                  <strong>Band:</strong> ${member.Band}
-                </div>
-
-                <div class="mb-3">
-                  <strong>Hometown:</strong> ${member.Hometown}
-                </div>
-
-                <div class="mb-3">
-                  <strong>Skills</strong>
-                  <div class="mt-2">
-                    ${memberSkills.map(s => `<span class="tag">${s.Skill}</span>`).join('')}
-                  </div>
-                </div>
-
-                <div>
-                  <strong>Projects</strong>
-                  <div class="mt-2">
-                    ${memberProjects.map(p => `<span class="tag">${p.ProjectName}</span>`).join('')}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-
-        container.innerHTML += card;
-      });
-    }
-
-    function renderProjects() {
-      const tbody = document.querySelector('#projectsTable tbody');
-      tbody.innerHTML = '';
-
-      const search = document.getElementById('searchInput').value.toLowerCase();
-
-      const filteredProjects = projects.filter(project =>
-        JSON.stringify(project).toLowerCase().includes(search)
-      );
-
-      filteredProjects.forEach((project, index) => {
-        const modalId = `projectModal${index}`;
-
-        const row = `
-          <tr data-bs-toggle="modal" data-bs-target="#${modalId}">
-            <td>${project.PersonName}</td>
-            <td><strong>${project.ProjectName}</strong></td>
-            <td>${project.Client}</td>
-            <td>${project.Role}</td>
-            <td>${project.AllocationPercent}%</td>
-            <td><span class="badge bg-primary">${project.Status}</span></td>
-          </tr>
-
-          <div class="modal fade" id="${modalId}" tabindex="-1">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-              <div class="modal-content">
-
-                <div class="modal-header bg-dark text-white">
-                  <h5 class="modal-title">${project.ProjectName}</h5>
-                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                  <div class="mb-4">
-                    <h6 class="fw-bold text-primary">Problem Statement</h6>
-                    <p>${project.ProblemStatement || '-'}</p>
-                  </div>
-
-                  <div class="mb-4">
-                    <h6 class="fw-bold text-primary">Solution Overview</h6>
-                    <p>${project.SolutionOverview || '-'}</p>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <strong>Client:</strong><br>
-                      ${project.Client}
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                      <strong>Role:</strong><br>
-                      ${project.Role}
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                      <strong>Allocation:</strong><br>
-                      ${project.AllocationPercent}%
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                      <strong>Status:</strong><br>
-                      ${project.Status}
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        `;
-
-        tbody.innerHTML += row;
-      });
-    }
-
-    function renderSkillsAnalytics() {
-      const container = document.getElementById('skillsAnalyticsContainer');
-      container.innerHTML = '';
-
-      const categoryMap = {};
-      const levelMap = {
-        Beginner: 0,
-        Intermediate: 0,
-        Advanced: 0,
-        Expert: 0
-      };
-
-      skills.forEach(skill => {
-        const category = skill.Category || 'Other';
-        categoryMap[category] = (categoryMap[category] || 0) + 1;
-
-        if (levelMap.hasOwnProperty(skill.Level)) {
-          levelMap[skill.Level] += 1;
-        }
-      });
-
-      const topCategories = Object.entries(categoryMap)
-        .sort((a, b) => b[1] - a[1]);
-
-      const categoryHtml = topCategories.map(item => {
-        const width = Math.min(item[1] * 22, 100);
-
-        return `
-          <div class="mb-4">
-            <div class="d-flex justify-content-between mb-2">
-              <strong>${item[0]}</strong>
-              <span>${item[1]} skills</span>
-            </div>
-
-            <div class="progress">
-              <div class="progress-bar" style="width:${width}%"></div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const html = `
-        <div class="col-lg-7 mb-4">
-          <div class="analytics-card">
-            <h4 class="mb-4">
-              <i class="fa-solid fa-chart-column"></i>
-              Skill Category Distribution
-            </h4>
-
-            ${categoryHtml}
-          </div>
+  D.members.forEach((m, idx) => {
+    const [bg, bg2] = avColor(idx);
+    const card = document.createElement('div');
+    card.className = 'member-card';
+    card.innerHTML = `
+      <div class="member-card-top">
+        <div class="avatar" style="background:linear-gradient(135deg,${bg},${bg2})">${m.avatar}</div>
+        <div>
+          <div class="member-name">${m.name}</div>
+          <div class="member-role">${m.role}</div>
         </div>
+      </div>
+      <div class="member-card-body">
+        <div class="info-row"><span class="info-icon">📍</span><span>${m.officeLocation}</span></div>
+        <div class="info-row"><span class="info-icon">🏠</span><span>${m.hometown}</span></div>
+        <div class="info-row"><span class="info-icon">✉️</span><span><a href="mailto:${m.contact}">${m.contact}</a></span></div>
+        <div class="member-about">${m.about}</div>
+        <div class="hobbies">${m.hobbies.map(h=>`<span class="hobby-tag">${h}</span>`).join('')}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+})();
 
-        <div class="col-lg-5 mb-4">
-          <div class="analytics-card">
-            <h4 class="mb-4">
-              <i class="fa-solid fa-medal"></i>
-              Expertise Breakdown
-            </h4>
+// ── Projects ─────────────────────────────────────────────────────────────────
+(function renderProjects() {
+  const list = document.getElementById('projects-list');
 
-            <div class="d-flex flex-column gap-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <span>Expert</span>
-                <span class="badge bg-dark">${levelMap.Expert}</span>
-              </div>
+  D.projects.forEach(p => {
+    const memberNames = p.memberIds.map(id => memberById(id)?.name).filter(Boolean).join(', ');
+    const statusCls   = 'status-' + p.status.replace(/\s/g, '-');
+    const clientDisp  = p.client === 'Internal'
+      ? '<span style="color:var(--amber)">Internal</span>'
+      : p.client;
 
-              <div class="d-flex justify-content-between align-items-center">
-                <span>Advanced</span>
-                <span class="badge bg-primary">${levelMap.Advanced}</span>
-              </div>
+    // Tech lead, PM display
+    const tlMember  = memberById(p.techLead);
+    const pmMember  = memberById(p.pm);
+    const otherMems = (p.otherMembers || []).map(id => memberById(id)).filter(Boolean);
 
-              <div class="d-flex justify-content-between align-items-center">
-                <span>Intermediate</span>
-                <span class="badge bg-warning text-dark">${levelMap.Intermediate}</span>
-              </div>
+    const memberPill = (m, idx) => {
+      const [bg, bg2] = avColor(D.members.indexOf(m));
+      return `<span class="team-member-pill">
+        <span class="pill-avatar" style="background:linear-gradient(135deg,${bg},${bg2})">${m.avatar}</span>
+        ${m.name}
+      </span>`;
+    };
 
-              <div class="d-flex justify-content-between align-items-center">
-                <span>Beginner</span>
-                <span class="badge bg-success">${levelMap.Beginner}</span>
-              </div>
-            </div>
+    const techTagsHtml = p.techStack.map(t => `<span class="tech-tag">${t}</span>`).join('');
 
-            <hr class="my-4">
-
-            <h5 class="mb-3">Top Skill Areas</h5>
-
-            <div>
-              ${topCategories.slice(0, 8).map(item => `
-                <span class="skill-pill">${item[0]} (${item[1]})</span>
-              `).join('')}
-            </div>
-          </div>
+    const wrap = document.createElement('div');
+    wrap.className = 'project-row-wrap';
+    wrap.innerHTML = `
+      <div class="project-row" onclick="toggleProject('${p.id}')">
+        <div>
+          <div class="project-name">${p.name}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:3px">${p.problemStatement.substring(0,60)}…</div>
         </div>
-      `;
-
-      container.innerHTML = html;
-    }
-
-    function renderActivities() {
-      const container = document.getElementById('activitiesContainer');
-      container.innerHTML = '';
-
-      const search = document.getElementById('searchInput').value.toLowerCase();
-
-      const filteredActivities = activities.filter(activity =>
-        JSON.stringify(activity).toLowerCase().includes(search)
-      );
-
-      filteredActivities.forEach(activity => {
-        const card = `
-          <div class="col-lg-6 mb-4">
-            <div class="activity-card">
-
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <h5>${activity.Title}</h5>
-                  <div class="small-text">
-                    ${activity.Name} • ${activity.ActivityType}
-                  </div>
-                </div>
-
-                <span class="badge bg-success">
-                  ${activity.Status}
-                </span>
-              </div>
-
-              <p class="mt-3">
-                ${activity.Description || ''}
-              </p>
-
-              <div class="small-text">
-                <strong>Platform:</strong>
-                ${activity.PlatformOrProvider || '-'}
-              </div>
-
-              <div class="small-text mt-2">
-                <strong>Date:</strong>
-                ${activity.Date || '-'}
-              </div>
-
-              ${activity.URL ? `
-                <div class="mt-4">
-                  <a href="${activity.URL}" target="_blank" class="btn btn-outline-primary btn-sm">
-                    Open Link
-                  </a>
-                </div>
-              ` : ''}
-            </div>
+        <div class="project-members">${memberNames}</div>
+        <div class="project-client">${clientDisp}</div>
+        <div class="project-alloc">${p.allocation}</div>
+        <div><span class="status-badge ${statusCls}">${p.status}</span></div>
+      </div>
+      <div class="project-detail" id="detail-${p.id}">
+        <div class="problem-full">${p.problemStatement}</div>
+        <div class="detail-grid">
+          <div class="detail-block">
+            <div class="detail-label">Tech Stack</div>
+            <div class="tech-tags">${techTagsHtml}</div>
           </div>
-        `;
+          <div class="detail-block">
+            <div class="detail-label">Timeline</div>
+            <div class="detail-value">${p.timeline.start} → ${p.timeline.end}</div>
+          </div>
+          <div class="detail-block" style="grid-column:1/-1">
+            <div class="detail-label">Approach</div>
+            <div class="detail-value">${p.approach}</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Tech Lead</div>
+            <div>${tlMember ? memberPill(tlMember) : '—'}</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">Project Manager</div>
+            <div>${pmMember ? memberPill(pmMember) : '—'}</div>
+          </div>
+          ${otherMems.length ? `
+          <div class="detail-block" style="grid-column:1/-1">
+            <div class="detail-label">Other Team Members</div>
+            <div>${otherMems.map(memberPill).join('')}</div>
+          </div>` : ''}
+        </div>
+      </div>`;
+    list.appendChild(wrap);
+  });
+})();
 
-        container.innerHTML += card;
-      });
+function toggleProject(id) {
+  const el = document.getElementById('detail-' + id);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.project-detail').forEach(d => d.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+// ── Skills ───────────────────────────────────────────────────────────────────
+(function renderSkills() {
+  const maxCount = Math.max(...D.skills.map(s => s.memberIds.length));
+
+  // By Skill view
+  const skillList = document.getElementById('skill-list');
+  D.skills.forEach(s => {
+    const barWidth = Math.round((s.memberIds.length / D.members.length) * 100);
+    const pills = s.memberIds.map(id => {
+      const m = memberById(id); if (!m) return '';
+      const idx = D.members.indexOf(m);
+      const [bg, bg2] = avColor(idx);
+      return `<span class="skill-member-chip">
+        <span class="chip-avatar" style="background:linear-gradient(135deg,${bg},${bg2})">${m.avatar}</span>
+        ${m.name}
+      </span>`;
+    }).join('');
+
+    const entry = document.createElement('div');
+    entry.className = 'skill-entry';
+    entry.innerHTML = `
+      <div class="skill-name-label">${s.skill}</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" style="width:${barWidth}%"></div></div>
+      <div style="font-size:11px;font-family:var(--mono);color:var(--text-dim);min-width:28px;text-align:right">${s.memberIds.length}</div>
+      <div class="skill-member-pills">${pills}</div>`;
+    skillList.appendChild(entry);
+  });
+
+  // By Member view
+  const memberGrid = document.getElementById('member-skills-grid');
+  D.members.forEach((m, idx) => {
+    const [bg, bg2] = avColor(idx);
+    const mySkills = D.skills.filter(s => s.memberIds.includes(m.id));
+    const tagsHtml = mySkills.map(s => `<span class="member-skill-tag">${s.skill}</span>`).join('');
+    const card = document.createElement('div');
+    card.className = 'member-skill-card';
+    card.innerHTML = `
+      <div class="member-skill-header">
+        <div class="avatar" style="background:linear-gradient(135deg,${bg},${bg2})">${m.avatar}</div>
+        <div>
+          <div class="ms-name">${m.name}</div>
+          <div class="ms-role">${m.role}</div>
+        </div>
+      </div>
+      <div class="member-skill-tags">${tagsHtml || '<span style="color:var(--text-dim);font-size:12px">No skills listed</span>'}</div>`;
+    memberGrid.appendChild(card);
+  });
+})();
+
+function showSkillView(view, btn) {
+  document.querySelectorAll('.skills-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Activities ───────────────────────────────────────────────────────────────
+(function renderActivities() {
+  const types = ['All', ...new Set(D.activities.map(a => a.type))];
+  const filterBar  = document.getElementById('activities-filter');
+  const actList    = document.getElementById('activities-list');
+  let activeFilter = 'All';
+
+  types.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (t === 'All' ? ' active' : '');
+    btn.textContent = t === 'All' ? 'All' : (typeEmoji[t] || '') + ' ' + t;
+    btn.onclick = () => {
+      activeFilter = t;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderList();
+    };
+    filterBar.appendChild(btn);
+  });
+
+  function renderList() {
+    actList.innerHTML = '';
+    const filtered = activeFilter === 'All'
+      ? D.activities
+      : D.activities.filter(a => a.type === activeFilter);
+
+    if (!filtered.length) {
+      actList.innerHTML = '<div class="empty-state">No activities found for this filter.</div>';
+      return;
     }
 
-    loadExcelData();
-  </script>
+    filtered.forEach(a => {
+      const m   = memberById(a.memberId);
+      const idx = m ? D.members.indexOf(m) : 0;
+      const [bg, bg2] = avColor(idx);
+      const cls  = typeCls(a.type);
+      const badgeCls = 'badge-' + cls;
+      const iconCls  = 'type-' + cls;
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      const card = document.createElement('div');
+      card.className = 'activity-card';
+      card.innerHTML = `
+        <div class="activity-type-icon ${iconCls}">${typeEmoji[a.type] || '📌'}</div>
+        <div class="activity-body">
+          <div class="activity-top">
+            <span class="activity-type-badge ${badgeCls}">${a.type}</span>
+            <span class="activity-title">${a.title}</span>
+          </div>
+          <div class="activity-desc">${a.description}</div>
+          <div class="activity-footer">
+            ${m ? `<div class="activity-who">
+              <span class="chip-avatar" style="background:linear-gradient(135deg,${bg},${bg2})">${m.avatar}</span>
+              ${m.name}
+            </div>` : ''}
+            ${a.link ? `<a class="activity-link" href="${a.link}" target="_blank">↗ Read more</a>` : ''}
+            <span class="activity-date">${a.date}</span>
+          </div>
+        </div>`;
+      actList.appendChild(card);
+    });
+  }
+
+  renderList();
+})();
+</script>
+
 </body>
 </html>
