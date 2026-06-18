@@ -664,7 +664,7 @@
 
   /* ── Activities ─────────────────────────────────────────────── */
   .activities-filter {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;
+    display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px;
   }
 
   .filter-btn {
@@ -915,12 +915,30 @@ function showSection(name) {
       ? '<span style="color:var(--amber)">Internal</span>'
       : p.client;
 
-    // Tech lead, PM display
-    const tlMember  = memberById(p.techLead);
-    const pmMember  = memberById(p.pm);
+    // Tech lead, PM display — accepts member id OR plain name string (external members)
+    const resolvePerson = val => {
+      const m = memberById(val);
+      if (m) {
+        const [bg, bg2] = avColor(D.members.indexOf(m));
+        return `<span class="team-member-pill">
+          <span class="pill-avatar" style="background:linear-gradient(135deg,${bg},${bg2})">${m.avatar}</span>
+          ${m.name}
+        </span>`;
+      }
+      // plain string — external / cross-team person
+      if (val && typeof val === 'string' && val.trim()) {
+        return `<span class="team-member-pill">
+          <span class="pill-avatar" style="background:linear-gradient(135deg,#556b8a,#3a4d63);font-size:10px">?</span>
+          ${val}
+        </span>`;
+      }
+      return '<span style="color:var(--text-dim)">—</span>';
+    };
+    const tlMember  = p.techLead;
+    const pmMember  = p.pm;
     const otherMems = (p.otherMembers || []).map(id => memberById(id)).filter(Boolean);
 
-    const memberPill = (m, idx) => {
+    const memberPill = (m) => {
       const [bg, bg2] = avColor(D.members.indexOf(m));
       return `<span class="team-member-pill">
         <span class="pill-avatar" style="background:linear-gradient(135deg,${bg},${bg2})">${m.avatar}</span>
@@ -960,11 +978,11 @@ function showSection(name) {
           </div>
           <div class="detail-block">
             <div class="detail-label">Tech Lead</div>
-            <div>${tlMember ? memberPill(tlMember) : '—'}</div>
+            <div>${resolvePerson(tlMember)}</div>
           </div>
           <div class="detail-block">
             <div class="detail-label">Project Manager</div>
-            <div>${pmMember ? memberPill(pmMember) : '—'}</div>
+            <div>${resolvePerson(pmMember)}</div>
           </div>
           ${otherMems.length ? `
           <div class="detail-block" style="grid-column:1/-1">
@@ -1045,47 +1063,121 @@ function showSkillView(view, btn) {
   const types = ['All', ...new Set(D.activities.map(a => a.type))];
   const filterBar  = document.getElementById('activities-filter');
   const actList    = document.getElementById('activities-list');
-  let activeFilter = 'All';
+  let activeType   = 'All';
+  let activeStatus = 'All'; // 'All' | 'Upcoming' | 'Past'
+
+  // ── Row 1: Status toggle (Upcoming / Past / All) ──
+  const statusWrap = document.createElement('div');
+  statusWrap.style.cssText = 'display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;width:fit-content;margin-bottom:10px;flex-basis:100%';
+
+  ['All','Upcoming','Past'].forEach(s => {
+    const btn = document.createElement('button');
+    const icons = { All:'📋', Upcoming:'🔜', Past:'✅' };
+    btn.className = 'toggle-btn' + (s === 'All' ? ' active' : '');
+    btn.style.cssText = 'padding:7px 18px;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:var(--font);background:transparent;color:var(--text-dim);transition:all 0.18s';
+    btn.innerHTML = `${icons[s]} ${s}`;
+    btn.onclick = () => {
+      activeStatus = s;
+      statusWrap.querySelectorAll('.toggle-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.color = 'var(--text-dim)';
+      });
+      btn.classList.add('active');
+      btn.style.background = s === 'Upcoming' ? 'rgba(245,166,35,0.15)' : s === 'Past' ? 'rgba(0,201,167,0.12)' : 'var(--teal)';
+      btn.style.color = s === 'Upcoming' ? 'var(--amber)' : s === 'Past' ? 'var(--teal)' : 'var(--navy)';
+      renderList();
+    };
+    // set initial active style
+    if (s === 'All') { btn.style.background = 'var(--teal)'; btn.style.color = 'var(--navy)'; }
+    statusWrap.appendChild(btn);
+  });
+
+  filterBar.appendChild(statusWrap);
+
+  // ── Row 2: Type filters ──
+  const typeWrap = document.createElement('div');
+  typeWrap.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;width:100%';
 
   types.forEach(t => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn' + (t === 'All' ? ' active' : '');
-    btn.textContent = t === 'All' ? 'All' : (typeEmoji[t] || '') + ' ' + t;
+    btn.dataset.typeVal = t;
+    btn.textContent = t === 'All' ? '🗂 All Types' : (typeEmoji[t] || '') + ' ' + t;
     btn.onclick = () => {
-      activeFilter = t;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      activeType = t;
+      typeWrap.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderList();
     };
-    filterBar.appendChild(btn);
+    typeWrap.appendChild(btn);
   });
+
+  filterBar.appendChild(typeWrap);
 
   function renderList() {
     actList.innerHTML = '';
-    const filtered = activeFilter === 'All'
-      ? D.activities
-      : D.activities.filter(a => a.type === activeFilter);
+    let filtered = D.activities;
+    if (activeStatus !== 'All') filtered = filtered.filter(a => (a.status || 'Past') === activeStatus);
+    if (activeType   !== 'All') filtered = filtered.filter(a => a.type === activeType);
+
+    // Sort: Upcoming first within group
+    filtered = [...filtered].sort((a,b) => {
+      const sa = a.status || 'Past', sb = b.status || 'Past';
+      if (sa === sb) return 0;
+      return sa === 'Upcoming' ? -1 : 1;
+    });
 
     if (!filtered.length) {
       actList.innerHTML = '<div class="empty-state">No activities found for this filter.</div>';
       return;
     }
 
+    // Group header when showing All statuses
+    let lastStatus = null;
+
     filtered.forEach(a => {
       const m   = memberById(a.memberId);
       const idx = m ? D.members.indexOf(m) : 0;
       const [bg, bg2] = avColor(idx);
-      const cls  = typeCls(a.type);
+      const cls      = typeCls(a.type);
       const badgeCls = 'badge-' + cls;
       const iconCls  = 'type-' + cls;
+      const aStatus  = a.status || 'Past';
+
+      // Group divider when showing both
+      if (activeStatus === 'All' && aStatus !== lastStatus) {
+        lastStatus = aStatus;
+        const divider = document.createElement('div');
+        divider.style.cssText = 'display:flex;align-items:center;gap:12px;margin:6px 0 4px';
+        const isUpcoming = aStatus === 'Upcoming';
+        divider.innerHTML = `
+          <span style="font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.12em;
+            color:${isUpcoming ? 'var(--amber)' : 'var(--teal)'};white-space:nowrap">
+            ${isUpcoming ? '🔜 Upcoming' : '✅ Past'}
+          </span>
+          <span style="flex:1;height:1px;background:var(--border)"></span>`;
+        actList.appendChild(divider);
+      }
+
+      const upcomingRibbon = aStatus === 'Upcoming'
+        ? `<span style="font-size:10px;font-family:var(--mono);background:rgba(245,166,35,0.12);
+             color:var(--amber);border:1px solid rgba(245,166,35,0.3);border-radius:4px;
+             padding:2px 7px;letter-spacing:0.06em">UPCOMING</span>`
+        : '';
 
       const card = document.createElement('div');
       card.className = 'activity-card';
+      if (aStatus === 'Upcoming') {
+        card.style.borderColor = 'rgba(245,166,35,0.25)';
+        card.style.background = 'linear-gradient(to right, rgba(245,166,35,0.04), var(--card))';
+      }
       card.innerHTML = `
         <div class="activity-type-icon ${iconCls}">${typeEmoji[a.type] || '📌'}</div>
         <div class="activity-body">
           <div class="activity-top">
             <span class="activity-type-badge ${badgeCls}">${a.type}</span>
+            ${upcomingRibbon}
             <span class="activity-title">${a.title}</span>
           </div>
           <div class="activity-desc">${a.description}</div>
